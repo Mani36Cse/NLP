@@ -1,0 +1,213 @@
+eaxmple and explain about the Sequence length and Padding
+
+Sequence length = the maximum number of tokens allowed in one sequence.
+
+
+Why do we use Padding?
+In a Seq2Seq model, different sentences can have different lengths.
+
+For example:
+English sentence 1 → "I am Mani"
+English sentence 2 → "I am learning machine learning"
+
+After tokenization:
+"I am Mani"
+→ [5, 8, 12]
+
+"I am learning machine learning"
+→ [5, 8, 20, 15, 20]
+
+Their lengths are different:
+3 tokens
+5 tokens
+
+But neural networks usually process data in batches, so the sequences in a batch need to have the same length.
+
+That's why we use padding.
+
+
+What is Padding?
+Padding means adding a special value, usually 0, to shorter sequences so that all sequences have the same length.
+
+For example, if our maximum length is 5:
+[5, 8, 12]
+
+becomes:
+[5, 8, 12, 0, 0]
+
+And:
+[5, 8, 20, 15, 20]
+
+stays:
+[5, 8, 20, 15, 20]
+
+Now both have length 5.
+
+Exactly — if the sentence has 25 tokens and maxlen=20, what happens to the remaining 5?
+They are removed (truncated).
+
+Why does this happen?
+Because you told pad_sequences():
+"I only want a maximum of 20 tokens."
+
+
+Simple :
+Less than 20 → add 0s
+Exactly 20    → no change
+More than 20 → remove extra tokens
+
+What is seq_length?
+Sequence length = the maximum number of tokens allowed in one sequence.
+
+
+Simple notes:
+Padding:
+Adds zeros to shorter sequences so that all sequences have the same length.
+
+Sequence length:
+Defines the maximum number of tokens allowed in a sequence.
+
+maxlen=20:
+Every sequence will have 20 positions; shorter sequences are padded and longer ones are truncated.
+
+padding='post':
+Adds padding zeros at the end of the sequence.
+
+One more important concept: in Seq2Seq, those 0s are normally treated as padding/masked positions, so the model doesn't learn that 0 is an actual word.
+
+
+Your Seq2Seq pipeline:
+
+English sentence
+       ↓
+   Tokenization
+       ↓
+[10, 20, 30]
+       ↓
+    Padding
+       ↓
+[10, 20, 30, 0, 0, 0, ...]
+       ↓
+   Encoder
+       ↓
+ Decoder
+       ↓
+Tamil output
+       ↓
+   Tokenization
+       ↓
+[50, 60, 70]
+       ↓
+    Padding
+       ↓
+[50, 60, 70, 0, 0, 0, ...]
+
+
+
+You should not randomly choose maxlen=20. A good way is to look at the length of all your sentences and choose a value that covers most of them.
+
+Simple approach
+Suppose you have 1,000 English sentences.
+After tokenization, their lengths might look like:
+
+Sentence 1 → 8 tokens
+Sentence 2 → 12 tokens
+Sentence 3 → 15 tokens
+Sentence 4 → 10 tokens
+...
+Sentence 950 → 19 tokens
+Sentence 1000 → 35 tokens
+
+You can find the maximum length in your dataset:
+max(len(seq) for seq in english_sequences)
+
+
+But there is a problem ⚠️
+
+Suppose:
+
+Most sentences → 5–20 tokens
+One sentence  → 100 tokens
+
+If you use:
+maxlen = 100
+you're creating a lot of unnecessary padding.
+
+This wastes memory and computation.
+
+Better approach: use a percentile
+For a real project, you can look at the 95th or 99th percentile of sequence lengths.
+
+For example:
+95% of English sentences → ≤ 25 tokens
+99% of English sentences → ≤ 35 tokens
+Maximum                  → 100 tokens
+
+
+
+
+
+decoder_output_sequences = np.eye(tamil_vocab_size)[output_sequences]
+Let's break it down.
+
+1. tamil_vocab_size
+Suppose your Tamil vocabulary contains 5 words/tokens:
+
+0 → padding
+1 → நான்
+2 → தமிழ்
+3 → கற்கிறேன்
+4 → AI
+
+Then:
+tamil_vocab_size = 5
+2. np.eye(tamil_vocab_size)
+np.eye(5) creates a 5 × 5 identity matrix:
+[
+ [1, 0, 0, 0, 0]  → token 0
+ [0, 1, 0, 0, 0]  → token 1
+ [0, 0, 1, 0, 0]  → token 2
+ [0, 0, 0, 1, 0]  → token 3
+ [0, 0, 0, 0, 1]  → token 4
+]
+
+Each token gets its own one-hot vector.
+
+3. [output_sequences]
+Suppose your output sequence is:
+output_sequences = [2, 3, 4, 0]
+
+When you do:
+np.eye(5)[output_sequences]
+
+NumPy uses each number as an index.
+
+So:
+2 → [0, 0, 1, 0, 0]
+3 → [0, 0, 0, 1, 0]
+4 → [0, 0, 0, 0, 1]
+0 → [1, 0, 0, 0, 0]
+
+The result becomes:
+[
+ [0, 0, 1, 0, 0],
+ [0, 0, 0, 1, 0],
+ [0, 0, 0, 0, 1],
+ [1, 0, 0, 0, 0]
+]
+
+This allows the model to compare its predicted probability distribution with the correct target distribution using a loss function such as categorical cross-entropy.
+
+overall flow is:
+
+Token ID
+   ↓
+[2]
+   ↓
+One-hot encoding
+   ↓
+[0, 0, 1, 0, 0]
+   ↓
+Decoder target
+
+Notes :np.eye() is just one way to create one-hot encoding; in larger projects, other methods such as tf.keras.utils.to_categorical() are also commonly used.
