@@ -1,0 +1,302 @@
+NLP
+
+Natural language processing 
+
+###
+Two Types of process in NLP
+
+1) Prediction Based 
+
+2) Text Analysis 
+
+Here also same process will comes, Data collection, preprocessing, Input/output split and test, train split and ML model and prediction and validation same process.
+
+Same computer can't understand the text so we convert into Number(Vectors)
+
+###
+We have few preprocessing techniques to covert the text to number. Below  all techniques for converting text into numerical vectors in NLP.
+1) Counter Vector (Also called Bag of Words (BoW))
+explain : It counts how many times each word appears in a document.
+
+2) TF-IDF Vector (Term Frequency × Inverse Document Frequency)
+explain : It gives more importance to words that are important in a particular document but not common across all documents.(How important is this word to this document?)
+
+3) Hash Vector
+explain : Hashing Vectorizer uses a hash function to convert words into positions in a fixed-size vector.
+
+We can do the preprocessing text to number before and after Test Train split.
+
+###
+In NLP we can use ML and DL and NLP algorithms
+
+Number --> Vector --> Facture extraction
+If the text convert into the numbers as suitable for algorithm then it called Facture extraction
+
+Simple work flow :
+Raw Text
+   ↓
+Text preprocessing
+   ↓
+Vectorization
+   ├── TF-IDF
+   └── Hashing
+   ↓
+ML Algorithm
+   ├── Logistic Regression
+   ↓
+Evaluation
+
+
+##
+Sentimental Analysis
+
+In SentimentIntensityAnalyzer Data preprocessing text to number convert is no need, the model already have that futures 
+
+#Polarity scores checks the sentiment of a piece of text
+
+Polarity scores {'neg': 0.0, 'neu': 1.0, 'pos': 0.0, 'compound': 0.0}
+The four values mean:
+neg → how negative the text is, neu → how neutral the text is
+pos → how positive the text is, compound → overall sentiment score
+
+If compound values 
+compound > 0    → Positive
+compound < 0    → Negative
+compound ≈ 0    → Neutral
+
+
+##
+Topic Modeling 
+Topic modeling is used to automatically discover the main topics/themes present in a collection of text.
+
+Ex dataset:
+"I love the new phone camera"
+"The battery life is amazing"
+"The screen quality is excellent"
+"The football match was exciting"
+"The player scored two goals"
+
+Topic modeling might discover:
+
+Topic 1: Phones → camera, battery, screen
+Topic 2: Football → match, player, goals
+You don't have to manually label the topics.
+
+
+##########################
+
+****** NLP with DL ******
+
+Tokenization is convert the big statement into single words.
+Tokenization is the process of breaking text into smaller pieces called tokens so that a machine-learning model can process the text.
+Text → Tokens → Numbers → Model
+
+Example 1: Word Tokenization
+
+Sentence:
+
+"I love machine learning"
+
+After tokenization:
+
+["I", "love", "machine", "learning"]
+
+Each word becomes a token.
+
+
+Types of Tokenization
+
+1. Word Tokenization, 2. Character Tokenization, 3. Subword Tokenization
+
+We can convert the meaning full words into numbers using ANN Neural Network, there are many pretrained word embedding in many languages 
+
+Word Embedding is the important in NLP
+a word embedding converts a word into a numerical vector that captures useful information about its meaning and relationships with other words.
+
+Example:
+
+Words that have similar meanings are placed close together.
+
+cat 🐱 and dog 🐶 → close because both are animals/pets
+cat 🐱 and tiger 🐯 → also close because both are animals
+cat 🐱 and car 🚗 → far apart because they are unrelated
+But computers don't use an actual map. Instead, they use numbers. 
+
+Word embeddings try to represent these relationships mathematically.
+
+So words with similar meanings or usage tend to have vectors that are close together.
+
+So word embedding models are created in Neural Network using Feed forward and backpropagation.
+
+
+
+Word2vec --> Word to vector is the one of algorithms in Word embedding 
+
+There are two strategies(types) in Word2vec to 
+1) Continuous Bag of words (CBOW)
+2) Skip Grams
+
+CBOW is the supervisor learning 
+how to will predict the word for that it have to understand the relationship with between every words.
+
+To get the relationship to the words they used context words and target word 
+
+### CBOW ###
+%%%
+This is the formula for CBOW :
+context words and target word and windows size 
+
+Formula for Context word:(-2, Target word, +2)
+
+Using this formula it will match the every words in the sentence continuously. so it called Continuous Bag of words
+
+In CBOW (Continuous Bag of Words), the window size tells us how many words around a target word are used as context to predict that target word.
+
+In CBOW Context as a input and Target as a Output, using Context we find the target.
+
+### Skip Gram ###
+
+Skip Gram is opposite for CBOW 
+In Skip gram target as a input and Context as a Output, using target we find the context.
+
+But mostly we use CBOW
+
+
+
+### RNN ###
+
+RNN fails mainly because it struggles with long-term dependencies due to vanishing/exploding gradients and sequential processing.
+
+
+
+#### LSTM ####
+
+LSTM uses Sigmoid and Tanh because they help it control and manage information flowing through the network.
+
+Sigmoid = Control/Gate → decides HOW MUCH information passes.
+Tanh = Information → decides WHAT information to store.
+
+@@@@@
+Sigmoid converts any value into a range between 0 and 1.
+
+Positive value → output closer to 1 ex: +5 → 0.99, +1 → 0.73
+Zero → output 0.5
+0 → 0.5
+Negative value → output closer to 0 ex: -1 → 0.27, -5 → 0.01
+
+Positive → 1 | Zero → 0.5 | Negative → 0
+
+Formula: Sigmoid(x) = 1 / (1 + e⁻ˣ)
+
+
+@@@@@
+Tanh converts values into a range between -1 and +1.
+
+Positive value → output closer to +1 ex: +1 → 0.76,  +5 → 1
+Zero → output 0
+0 → 0
+Negative value → output closer to -1 ex: -1 → -0.76, -5 → -1
+
+Positive → +1 | Zero → 0 | Negative → -1
+
+Tanh = tells the model whether information is positive, negative, or neutral.
+
+##############
+LSTM = Sigmoid controls + Tanh transforms information.
+
+Sigmoid will help to get how much % Long term to remember.
+
+Tanh will help to get it is potential long term memory. the result will consider whether will take the value to long term or not. 
+
+
+### Sequence to Sequence ####
+
+Seq 2 Seq is like application in this we use LSTM model
+
+Seq 2 Seq must be support only on order or sequence of data like stock prediction or market prices.
+
+Seq 2 Seq it supervise learning 
+
+It have 2 process Encoder(Input) and Decoder(Output)
+
+Context vector is the data it will transfer data Encoder to Decoder
+
+
+In this Seq 2 Seq we have to give some data in preprocessing data. In Encoding 
+
+<SOS> and <EOS>
+
+Start of the sentence and End of the sentence, It will indicate the sentence has been started and ended.
+
+While processing this sos and eos also consider as a token 
+
+The data will pass through LSTM one by one 
+
+In Encoder we used LSTM with layers and cells. In one layer we used many LSTM model it mention as a cell
+
+In  Decoder same process here we used LSTM with layers and cells. In one layer we used many LSTM model it mention as a cell
+
+Then next Decoder it have SoftMax
+
+@@@@
+SoftMax
+Softmax converts multiple values into probabilities between 0 and 1, where all probabilities add up to 1.
+Softmax converts logits/scores into probabilities (0–1), and the probabilities add up to 1. The highest probability is the most likely prediction.
+
+Example:
+Scores:     2.0   1.0   0.5
+Softmax:    0.63  0.23  0.14
+The highest probability is usually selected as the predicted class.
+
+Where is Softmax used?
+Mainly in the output layer of a classification model
+Used when there are multiple classes
+In a Transformer decoder, Softmax converts the output scores (logits) into probabilities for the next token. 
+
+
+In the Transformer Decoder, Softmax converts token scores into probabilities for the next token. During training, the loss and backpropagation use these probabilities to calculate gradients, which the optimizer uses to update the model's weights.
+
+
+@@@@
+Teacher Forcing
+
+Teacher Forcing in Transformer Decoder
+Teacher forcing means giving the decoder the correct previous token during training instead of giving it the token that the model predicted.
+
+Teacher forcing is a training technique where the decoder receives the actual previous token as input instead of its own predicted token.
+
+Important: Teacher forcing is mainly a training technique. During actual inference/generation, the decoder generally uses its own previously generated token.
+
+Example:
+Suppose the correct sentence is:
+I am learning AI
+
+During training:
+Decoder input       → Predict
+<START>             → I
+<START> I           → am
+<START> I am        → learning
+<START> I am learning → AI
+
+Even if the model predicts the previous word incorrectly, we still give the correct previous word as the next input.
+
+The main purpose of teacher forcing is to help the decoder learn faster and more accurately by giving it the correct previous word during training.
+
+
+Important notes:
+1) In LSTM long term memory (Cell state) don't operate with Weight and Bias W B, that how is over comes the Exploding and Vanishing issue on RNN.
+2) In Shot team memory (hidden state) have W and B weight and Bias. Without W,B the learning process won't happen. so in shot team it have W and B
+
+
+
+Important point Seq to Seq is the supervised learning and Seq 2 Seq application is LSTM.
+
+Interview questions :
+Below questions are come from Seq 2 Seq model
+
+what is the use of SoftMax?
+
+what is the use of Teacher Forcing using in Decoder?
+Teacher forcing uses the actual/ground-truth previous output as the next decoder input during training.
+
+Teacher Forcing means giving the decoder the correct previous output instead of its own previous prediction while training, so it can learn the sequence more quickly and effectively.
